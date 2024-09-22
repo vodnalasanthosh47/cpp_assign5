@@ -1,6 +1,5 @@
-total species 1
-mammal 1
-lion 3 carnivore
+total species 0
+mammal 0
 reptile 0
 bird 0
 aquatic 0

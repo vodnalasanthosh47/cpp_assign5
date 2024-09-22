@@ -18,66 +18,64 @@ int main() {
         fout.close();
     }
 
-    if (fin.peek() != ifstream::traits_type::eof()) {
-        string line;
-        enum read_status {declaration, mammal_reading, reptile_reading, bird_reading, aquatic_reading};
-        int species_to_read;
-        int species_read = 0;
-        read_status current = declaration;
-        while (getline(fin, line)) {
-            istringstream iss(line);
-            if (current == declaration) {
-                if (line.substr(0, 13) == "total species") {
-                    current = declaration;
-                }
-                if (line.substr(0, 6) == "mammal") {
-                    current = mammal_reading;
-                    iss >> name >> species_to_read;
-                    if (species_to_read == 0)
-                        current = declaration;
-                }
-                else if (line.substr(0, 7) == "reptile") {
-                    current = reptile_reading;
-                    iss >> name >> species_to_read;
-                    if (species_to_read == 0)
-                        current = declaration;
-                }
-                else if (line.substr(0, 4) == "bird") {
-                    current = bird_reading;
-                    iss >> name >> species_to_read;
-                    if (species_to_read == 0)
-                        current = declaration;
-                }
-                else if (line.substr(0, 7) == "aquatic") {
-                    current = aquatic_reading;
-                    iss >> name >> species_to_read;
-                    if (species_to_read == 0)
-                        current = declaration;
-                }
+    string line;
+    enum read_status {declaration, mammal_reading, reptile_reading, bird_reading, aquatic_reading};
+    int species_to_read;
+    int species_read = 0;
+    read_status current = declaration;
+    while (getline(fin, line)) {
+        istringstream iss(line);
+        if (current == declaration) {
+            if (line.substr(0, 13) == "total species") {
+                current = declaration;
             }
-            else {
-                iss >> name >> count >> special_attr;
-                switch (current)
-                {
-                case mammal_reading:
-                    category = 'M';
-                    break;
-                case reptile_reading:
-                    category = 'R';
-                    break;
-                case bird_reading:
-                    category = 'B';
-                    break;
-                case aquatic_reading:
-                    category = 'Q';
-                    break;
-                }
-                manager.add_species(category, name, count, special_attr);
-                species_read++;
-                if (species_read == species_to_read) {
+            if (line.substr(0, 6) == "mammal") {
+                current = mammal_reading;
+                iss >> name >> species_to_read;
+                if (species_to_read == 0)
                     current = declaration;
-                    species_read = 0;
-                }
+            }
+            else if (line.substr(0, 7) == "reptile") {
+                current = reptile_reading;
+                iss >> name >> species_to_read;
+                if (species_to_read == 0)
+                    current = declaration;
+            }
+            else if (line.substr(0, 4) == "bird") {
+                current = bird_reading;
+                iss >> name >> species_to_read;
+                if (species_to_read == 0)
+                    current = declaration;
+            }
+            else if (line.substr(0, 7) == "aquatic") {
+                current = aquatic_reading;
+                iss >> name >> species_to_read;
+                if (species_to_read == 0)
+                    current = declaration;
+            }
+        }
+        else {
+            iss >> name >> count >> special_attr;
+            switch (current)
+            {
+            case mammal_reading:
+                category = 'M';
+                break;
+            case reptile_reading:
+                category = 'R';
+                break;
+            case bird_reading:
+                category = 'B';
+                break;
+            case aquatic_reading:
+                category = 'Q';
+                break;
+            }
+            manager.add_species(category, name, count, special_attr);
+            species_read++;
+            if (species_read == species_to_read) {
+                current = declaration;
+                species_read = 0;
             }
         }
     }
@@ -101,6 +99,9 @@ int main() {
             ofstream fout("db.txt");
             manager.save_to_txt(fout);
             break;
+        }
+        else {
+            cout << "Error: Invalid command" << endl;
         }
     }
     return 0;
