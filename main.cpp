@@ -2,19 +2,11 @@
 #include <iostream>
 #include <sstream>
 #include "zoo_classes.h"
+#include "input_validation.h"
 
 using namespace std;
 
 const string FileName = "db.txt";
-
-int space_counter(const string &str) {
-    int count = 0;
-    for (char c : str) {
-        if (c == ' ')
-            count++;
-    }
-    return count;
-}
 
 int main() {
     string command, name, special_attr;
@@ -97,11 +89,10 @@ int main() {
     while (true) {
         cin >> command;
         if (command == "add") {
+            cin >> ws;
             getline(cin, line);
-            num_spaces = space_counter(line);
-            if (num_spaces == 4) {
-                istringstream iss(line);
-                iss >> category >> name >> count >> special_attr;
+            if (validateAddCommand(line, category, name, count, special_attr)) {
+                cout << category << ":" << name << ":" << count << ":" << special_attr << endl;
                 manager->add_species(category, name, count, special_attr);
             }
             else {
@@ -109,11 +100,9 @@ int main() {
             }
         }
         else if (command == "delete") {
+            cin >> ws;
             getline(cin, line);
-            num_spaces = space_counter(line);
-            if (num_spaces == 3) {
-                istringstream iss(line);
-                iss >> category >> name >> count;
+            if (validateDeleteCommand(line, category, name, count)) {
                 manager->delete_species(category, name, count);
             }
             else {
@@ -121,21 +110,27 @@ int main() {
             }
         }
         else if (command == "show") {
+            cin >> ws;
             getline(cin, line);
-            num_spaces = space_counter(line);
-            if (num_spaces == 1) {
-                manager->show_species(line[1]);
+            if (validateShowCommand(line, category)) {
+                manager->show_species(category);
             }
             else {
                 cout << "Error: Invalid command. Valid command for 'show' is 'show <category character>'" << endl;
             }
         }
         else if (command == "exit") {
-            ofstream fout(FileName);
-            manager->save_to_txt(fout);
-            fout.close();
-            delete manager;
-            break;
+            getline(cin, line);
+            if (validateExitCommand(line)) {
+                ofstream fout(FileName);
+                manager->save_to_txt(fout);
+                fout.close();
+                delete manager;
+                break;
+            }
+            else {
+                cout << "Error: Invalid command. Valid command for 'exit' is 'exit'" << endl;
+            }
         }
         else {
             cout << "Error: Invalid command. Valid commands are add, delete, show and exit." << endl;

@@ -1,7 +1,9 @@
-total species 2
+total species 4
 mammal 1
-lion 12 carnivore
+lion 10 carnivore
 reptile 1
 iguana 23 small
-bird 0
-aquatic 0
+bird 1
+eagle 12 insect
+aquatic 1
+hippo 50 plants
