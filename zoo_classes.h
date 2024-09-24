@@ -71,7 +71,7 @@ public:
     Zoo_species(string name, int count) 
     : Species_name(name), Species_count(count) {}
     
-    virtual ~Zoo_species() {}
+    virtual ~Zoo_species() {};
     
     void Set_name(string name) {
         Species_name = name;
@@ -114,6 +114,8 @@ public:
         category = 'M';
     }
     
+    ~Mammal() {};
+
     void Set_diet_type(diet_type type) {
         Diet_type = type;
     }
@@ -142,6 +144,8 @@ public:
         category = 'R';
     }
     
+    ~Reptile() {};
+
     void Set_feed_size(size_type type) {
         Feed_size = type;
     }
@@ -170,6 +174,8 @@ public:
         category = 'B';
     }
     
+    ~Bird() {};
+
     void Set_bird_feed(bird_feed_type type) {
         Bird_feed = type;
     }
@@ -198,6 +204,8 @@ public:
         category = 'Q';
     }
     
+    ~Aquatic() {};
+
     void Set_aqua_feed(aqua_feed_type type) {
         Aqua_feed = type;
     }
@@ -251,88 +259,95 @@ public:
         num_aquatics = 0;
     }
 
+    ~Zoo_manager() {
+        for (Zoo_species* species : zoo) {
+            delete species;
+        }
+        delete &zoo;
+    }
+
     void add_species(char category, string name, int count, string special_attr) {
         bool found = false;
-            for (Zoo_species* species : zoo) {
-                if (species->Match(name, category)) {
-                    found = true;
-                    if (species->Match_special_attr(special_attr)) {
-                        species->Set_count(species->Get_count() + count);
+        for (Zoo_species* species : zoo) {
+            if (species->Match(name, category)) {
+                found = true;
+                if (species->Match_special_attr(special_attr)) {
+                    species->Set_count(species->Get_count() + count);
+                }
+                else {
+                    cout << "Error: Special attribute mismatch" << endl;
+                }
+                break;
+            }
+        }
+        if (!found) {
+            switch (category) 
+            {
+                case 'M':
+                    if (special_attr == "herbivore") {
+                        zoo.push_back(new Mammal(name, count, herbivore));
+                        num_mammals++;
                     }
-                    else {
-                        cout << "Error: Special attribute mismatch" << endl;
+                    else if (special_attr == "carnivore") {
+                        zoo.push_back(new Mammal(name, count, carnivore));
+                        num_mammals++;
                     }
+                    else
+                        cout << "Error: Invalid special attribute" << endl;
                     break;
-                }
+                case 'R':
+                    if (special_attr == "small") {
+                        zoo.push_back(new Reptile(name, count, small));
+                        num_reptiles++;
+                    }
+                    else if (special_attr == "medium") {
+                        zoo.push_back(new Reptile(name, count, medium));
+                        num_reptiles++;
+                    }
+                    else if (special_attr == "large") {
+                        zoo.push_back(new Reptile(name, count, large));
+                        num_reptiles++;
+                    }
+                    else
+                        cout << "Error: Invalid special attribute" << endl;
+                    break;
+                case 'B':
+                    if (special_attr == "grain") {
+                        zoo.push_back(new Bird(name, count, grain));
+                        num_birds++;
+                    }
+                    else if (special_attr == "insect") {
+                        zoo.push_back(new Bird(name, count, insect));
+                        num_birds++;
+                    }
+                    else if (special_attr == "fish") {
+                        zoo.push_back(new Bird(name, count, fish));
+                        num_birds++;
+                    }
+                    else
+                        cout << "Error: Invalid special attribute" << endl;
+                    break;
+                case 'Q':
+                    if (special_attr == "fishfood") {
+                        zoo.push_back(new Aquatic(name, count, fishfood));
+                        num_aquatics++;
+                    }
+                    else if (special_attr == "livefish") {
+                        zoo.push_back(new Aquatic(name, count, livefish));
+                        num_aquatics++;
+                    }
+                    else if (special_attr == "plants") {
+                        zoo.push_back(new Aquatic(name, count, plants));
+                        num_aquatics++;
+                    }
+                    else
+                        cout << "Error: Invalid special attribute" << endl;
+                    break;
+                default:
+                    cout << "Error: Invalid category" << endl;
+                    break;
             }
-            if (!found) {
-                switch (category) 
-                {
-                    case 'M':
-                        if (special_attr == "herbivore") {
-                            zoo.push_back(new Mammal(name, count, herbivore));
-                            num_mammals++;
-                        }
-                        else if (special_attr == "carnivore") {
-                            zoo.push_back(new Mammal(name, count, carnivore));
-                            num_mammals++;
-                        }
-                        else
-                            cout << "Error: Invalid special attribute" << endl;
-                        break;
-                    case 'R':
-                        if (special_attr == "small") {
-                            zoo.push_back(new Reptile(name, count, small));
-                            num_reptiles++;
-                        }
-                        else if (special_attr == "medium") {
-                            zoo.push_back(new Reptile(name, count, medium));
-                            num_reptiles++;
-                        }
-                        else if (special_attr == "large") {
-                            zoo.push_back(new Reptile(name, count, large));
-                            num_reptiles++;
-                        }
-                        else
-                            cout << "Error: Invalid special attribute" << endl;
-                        break;
-                    case 'B':
-                        if (special_attr == "grain") {
-                            zoo.push_back(new Bird(name, count, grain));
-                            num_birds++;
-                        }
-                        else if (special_attr == "insect") {
-                            zoo.push_back(new Bird(name, count, insect));
-                            num_birds++;
-                        }
-                        else if (special_attr == "fish") {
-                            zoo.push_back(new Bird(name, count, fish));
-                            num_birds++;
-                        }
-                        else
-                            cout << "Error: Invalid special attribute" << endl;
-                        break;
-                    case 'Q':
-                        if (special_attr == "fishfood") {
-                            zoo.push_back(new Aquatic(name, count, fishfood));
-                            num_aquatics++;
-                        }
-                        else if (special_attr == "livefish") {
-                            zoo.push_back(new Aquatic(name, count, livefish));
-                            num_aquatics++;
-                        }
-                        else if (special_attr == "plants") {
-                            zoo.push_back(new Aquatic(name, count, plants));
-                            num_aquatics++;
-                        }
-                        else
-                            cout << "Error: Invalid special attribute" << endl;
-                        break;
-                    default:
-                        cout << "Error: Invalid category" << endl;
-                        break;
-                }
-            }
+        }
     }
 
     void delete_species(char category, string name, int count) {

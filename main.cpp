@@ -5,16 +5,27 @@
 
 using namespace std;
 
+const string FileName = "db.txt";
+
+int space_counter(const string &str) {
+    int count = 0;
+    for (char c : str) {
+        if (c == ' ')
+            count++;
+    }
+    return count;
+}
+
 int main() {
     string command, name, special_attr;
     int count;
     char category;
 
-    Zoo_manager manager;
+    Zoo_manager* manager = new Zoo_manager();
     
-    ifstream fin("db.txt");
+    ifstream fin(FileName);
     if (!fin.is_open()) {
-        ofstream fout("db.txt");
+        ofstream fout(FileName);
         fout.close();
     }
 
@@ -71,7 +82,7 @@ int main() {
                 category = 'Q';
                 break;
             }
-            manager.add_species(category, name, count, special_attr);
+            manager->add_species(category, name, count, special_attr);
             species_read++;
             if (species_read == species_to_read) {
                 current = declaration;
@@ -79,29 +90,55 @@ int main() {
             }
         }
     }
+    
+    int num_spaces;
 
     cout << "Start now" << endl;
     while (true) {
         cin >> command;
         if (command == "add") {
-            cin >> category >> name >> count >> special_attr;
-            manager.add_species(category, name, count, special_attr);
+            getline(cin, line);
+            num_spaces = space_counter(line);
+            if (num_spaces == 4) {
+                istringstream iss(line);
+                iss >> category >> name >> count >> special_attr;
+                manager->add_species(category, name, count, special_attr);
+            }
+            else {
+                cout << "Error: Invalid command. Valid command for 'add' is 'add <category character> <species name> <species count> <special attribute>'" << endl;
+            }
         }
         else if (command == "delete") {
-            cin >> category >> name >> count;
-            manager.delete_species(category, name, count);
+            getline(cin, line);
+            num_spaces = space_counter(line);
+            if (num_spaces == 3) {
+                istringstream iss(line);
+                iss >> category >> name >> count;
+                manager->delete_species(category, name, count);
+            }
+            else {
+                cout << "Error: Invalid command. Valid command for 'delete' is 'delete <category character> <species name> <species count>'" << endl;
+            }
         }
         else if (command == "show") {
-            cin >> category;
-            manager.show_species(category);
+            getline(cin, line);
+            num_spaces = space_counter(line);
+            if (num_spaces == 1) {
+                manager->show_species(line[1]);
+            }
+            else {
+                cout << "Error: Invalid command. Valid command for 'show' is 'show <category character>'" << endl;
+            }
         }
         else if (command == "exit") {
-            ofstream fout("db.txt");
-            manager.save_to_txt(fout);
+            ofstream fout(FileName);
+            manager->save_to_txt(fout);
+            fout.close();
+            delete manager;
             break;
         }
         else {
-            cout << "Error: Invalid command" << endl;
+            cout << "Error: Invalid command. Valid commands are add, delete, show and exit." << endl;
         }
     }
     return 0;
