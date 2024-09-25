@@ -6,15 +6,15 @@
 
 using namespace std;
 
+// Some constants used in the program
 const string FileName = "db.txt";
+const string AddCommandFormat = "add <category character> <species name> <species count> <special attribute>";
+const string DeleteCommandFormat = "delete <category character> <species name> <species count>";
+const string ShowCommandFormat = "show <category character>";
+const string ExitCommandFormat = "exit";
+const string InvalidCommandError = "Error: Invalid command. Valid commands are add, delete, show and exit.\n";
 
-int main() {
-    string command, name, special_attr;
-    int count;
-    char category;
-
-    Zoo_manager* manager = new Zoo_manager();
-    
+void loadFromFile(Zoo_manager* manager) {
     ifstream fin(FileName);
     if (!fin.is_open()) {
         ofstream fout(FileName);
@@ -22,9 +22,14 @@ int main() {
     }
 
     string line;
+    string name, special_attr;
+    int count;
+    char category;
+
     enum read_status {declaration, mammal_reading, reptile_reading, bird_reading, aquatic_reading};
     int species_to_read;
     int species_read = 0;
+
     read_status current = declaration;
     while (getline(fin, line)) {
         istringstream iss(line);
@@ -82,8 +87,17 @@ int main() {
             }
         }
     }
+}
+
+int main() {
+    string line;
+    string command, name, special_attr;
+    int count;
+    char category;
+
+    Zoo_manager* manager = new Zoo_manager();
     
-    int num_spaces;
+    loadFromFile(manager);
 
     cout << "Start now" << endl;
     while (true) {
@@ -96,7 +110,7 @@ int main() {
                 manager->add_species(category, name, count, special_attr);
             }
             else {
-                cout << "Error: Invalid command. Valid command for 'add' is 'add <category character> <species name> <species count> <special attribute>'" << endl;
+                cout << "Error: Invalid format. Valid format is '" << AddCommandFormat << "'" << endl;
             }
         }
         else if (command == "delete") {
@@ -106,7 +120,7 @@ int main() {
                 manager->delete_species(category, name, count);
             }
             else {
-                cout << "Error: Invalid command. Valid command for 'delete' is 'delete <category character> <species name> <species count>'" << endl;
+                cout << "Error: Invalid format. Valid format is '" << DeleteCommandFormat << "'" << endl;
             }
         }
         else if (command == "show") {
@@ -116,7 +130,7 @@ int main() {
                 manager->show_species(category);
             }
             else {
-                cout << "Error: Invalid command. Valid command for 'show' is 'show <category character>'" << endl;
+                cout << "Error: Invalid format. Valid format is '" << ShowCommandFormat << "'" << endl;
             }
         }
         else if (command == "exit") {
@@ -129,11 +143,11 @@ int main() {
                 break;
             }
             else {
-                cout << "Error: Invalid command. Valid command for 'exit' is 'exit'" << endl;
+                cout << "Error: Invalid format. Valid format is '" << ExitCommandFormat << "'" << endl;
             }
         }
         else {
-            cout << "Error: Invalid command. Valid commands are add, delete, show and exit." << endl;
+            cout << InvalidCommandError;
         }
     }
     return 0;
