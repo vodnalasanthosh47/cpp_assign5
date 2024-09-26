@@ -2,8 +2,6 @@
 #include "zoo_classes.h"
 #include "enum_to_str.h"
 
-using namespace std;
-
 // Zoo_species methods
 Zoo_species::Zoo_species(string name, int count) : Species_name(name), Species_count(count) {}
 

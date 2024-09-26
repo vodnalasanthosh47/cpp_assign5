@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "zoo_species.h"
+#include "zoo_classes.h"
 
 // Some constants used
 const string InvalidSpecialAttributeError = "Error: Invalid special attribute\n";
@@ -16,10 +16,12 @@ Zoo_manager::Zoo_manager() {
 }
 
 Zoo_manager::~Zoo_manager() {
-    for (Zoo_species* species : zoo) {
+    while (zoo.size() > 0) {
+        Zoo_species* species = zoo.back();
+        zoo.pop_back();
         delete species;
     }
-    delete &zoo;
+    // delete &zoo;
 }
 
 void Zoo_manager::print_category(char category, int num_category) const {
@@ -199,7 +201,7 @@ void Zoo_manager::show_species(char category) const {
     }
 }
 
-void Zoo_manager::save_to_txt(ofstream& fout) const{
+void Zoo_manager::save_to_txt(ofstream& fout) const {
     int num_species_to_save = 0;
     int species_saved = 0;
     fout << "total species " << zoo.size() << endl;

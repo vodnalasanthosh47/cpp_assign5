@@ -1,6 +1,7 @@
 {
-    "files.associations": {
-        "source_location": "cpp",
-        "stacktrace": "cpp"
-    }
+  "files.associations": {
+    "source_location": "cpp",
+    "stacktrace": "cpp",
+    "new": "cpp"
+  }
 }
