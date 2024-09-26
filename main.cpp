@@ -16,13 +16,21 @@ const string InvalidCommandError = "Error: Invalid command. Valid commands are a
 
 void loadFromFile(Zoo_manager* manager) {
     ifstream fin(FileName);
-    if (!fin.is_open()) {
+    try {
+        if (!fin.is_open()) {
+            throw runtime_error("Error: Cannot open file " + FileName);
+        }
+    } catch (const runtime_error& e) {
         ofstream fout(FileName);
+        if (!fout) {
+            cerr << "Failed to create " + FileName << endl;
+        }
         fout.close();
     }
 
     string line;
     string name, special_attr;
+    string temp;
     int count;
     char category;
 
@@ -39,25 +47,25 @@ void loadFromFile(Zoo_manager* manager) {
             }
             if (line.substr(0, 6) == "mammal") {
                 current = mammal_reading;
-                iss >> name >> species_to_read;
+                iss >> temp >> species_to_read;
                 if (species_to_read == 0)
                     current = declaration;
             }
             else if (line.substr(0, 7) == "reptile") {
                 current = reptile_reading;
-                iss >> name >> species_to_read;
+                iss >> temp >> species_to_read;
                 if (species_to_read == 0)
                     current = declaration;
             }
             else if (line.substr(0, 4) == "bird") {
                 current = bird_reading;
-                iss >> name >> species_to_read;
+                iss >> temp >> species_to_read;
                 if (species_to_read == 0)
                     current = declaration;
             }
             else if (line.substr(0, 7) == "aquatic") {
                 current = aquatic_reading;
-                iss >> name >> species_to_read;
+                iss >> temp >> species_to_read;
                 if (species_to_read == 0)
                     current = declaration;
             }
@@ -87,6 +95,7 @@ void loadFromFile(Zoo_manager* manager) {
             }
         }
     }
+    fin.close();
 }
 
 int main() {

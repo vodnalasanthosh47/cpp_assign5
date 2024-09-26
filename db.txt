@@ -1,9 +1,0 @@
-total species 4
-mammal 1
-lion 10 carnivore
-reptile 1
-iguana 23 small
-bird 1
-eagle 12 insect
-aquatic 1
-hippo 50 plants
