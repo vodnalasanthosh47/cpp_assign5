@@ -108,14 +108,13 @@ int main() {
     
     loadFromFile(manager);
 
-    cout << "Start now" << endl;
+    cout << "Data loaded from " + FileName << endl;
     while (true) {
         cin >> command;
         if (command == "add") {
             cin >> ws;
             getline(cin, line);
             if (validateAddCommand(line, category, name, count, special_attr)) {
-                cout << category << ":" << name << ":" << count << ":" << special_attr << endl;
                 manager->add_species(category, name, count, special_attr);
             }
             else {
@@ -156,6 +155,7 @@ int main() {
             }
         }
         else {
+            getline(cin, line);
             cout << InvalidCommandError;
         }
     }
