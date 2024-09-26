@@ -14,8 +14,10 @@ const string ShowCommandFormat = "show <category character>";
 const string ExitCommandFormat = "exit";
 const string InvalidCommandError = "Error: Invalid command. Valid commands are add, delete, show and exit.\n";
 
+// Function that loads data from file to the zoo manager
 void loadFromFile(Zoo_manager* manager) {
     ifstream fin(FileName);
+    // Trying to open the file and if it fails, create the file
     try {
         if (!fin.is_open()) {
             throw runtime_error("Error: Cannot open file " + FileName);
@@ -28,6 +30,7 @@ void loadFromFile(Zoo_manager* manager) {
         fout.close();
     }
 
+    //  Declaring variables used later on
     string line;
     string name, special_attr;
     string temp;
@@ -38,6 +41,7 @@ void loadFromFile(Zoo_manager* manager) {
     int species_to_read;
     int species_read = 0;
 
+    // Reading from the file
     read_status current = declaration;
     while (getline(fin, line)) {
         istringstream iss(line);
@@ -99,21 +103,26 @@ void loadFromFile(Zoo_manager* manager) {
 }
 
 int main() {
+    // Declaring variables used later on
     string line;
     string command, name, special_attr;
     int count;
     char category;
 
+    // Creating a zoo manager object
     Zoo_manager* manager = new Zoo_manager();
     
+    // Loading data from file
     loadFromFile(manager);
 
     cout << "Data loaded from " + FileName << endl;
+    // Main loop of the program where we take user input and act upon it
     while (true) {
         cin >> command;
         if (command == "add") {
             cin >> ws;
             getline(cin, line);
+            // If the command format is valid, add the species
             if (validateAddCommand(line, category, name, count, special_attr)) {
                 manager->add_species(category, name, count, special_attr);
             }
@@ -124,6 +133,7 @@ int main() {
         else if (command == "delete") {
             cin >> ws;
             getline(cin, line);
+            // If the command format is valid, delete the species
             if (validateDeleteCommand(line, category, name, count)) {
                 manager->delete_species(category, name, count);
             }
@@ -134,6 +144,7 @@ int main() {
         else if (command == "show") {
             cin >> ws;
             getline(cin, line);
+            // If the command format is valid, show the species
             if (validateShowCommand(line, category)) {
                 manager->show_species(category);
             }
@@ -143,6 +154,8 @@ int main() {
         }
         else if (command == "exit") {
             getline(cin, line);
+            // If the command format is valid, exit the program
+            // Before exiting, save the data to the file
             if (validateExitCommand(line)) {
                 ofstream fout(FileName);
                 manager->save_to_txt(fout);
@@ -155,6 +168,7 @@ int main() {
             }
         }
         else {
+            // If the command is invalid, show an error message
             getline(cin, line);
             cout << InvalidCommandError;
         }

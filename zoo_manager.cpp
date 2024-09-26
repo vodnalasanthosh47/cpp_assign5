@@ -7,7 +7,7 @@ const string InvalidCategoryError = "Error: Invalid category\n";
 const string ExcessiveDeletionError = "Error: Count to delete exceeds current count\n";
 const string NonExistentSpeciesError = "Error: Given species does not exist\n";
 
-// Zoo_manager methods
+// Zoo_manager constructor
 Zoo_manager::Zoo_manager() {
     num_mammals = 0;
     num_reptiles = 0;
@@ -15,6 +15,7 @@ Zoo_manager::Zoo_manager() {
     num_aquatics = 0;
 }
 
+// Zoo_manager destructor
 Zoo_manager::~Zoo_manager() {
     while (zoo.size() > 0) {
         Zoo_species* species = zoo.back();
@@ -24,6 +25,7 @@ Zoo_manager::~Zoo_manager() {
     // delete &zoo;
 }
 
+// Zoo_manager methods
 void Zoo_manager::print_category(char category, int num_category) const {
     switch (category) 
     {

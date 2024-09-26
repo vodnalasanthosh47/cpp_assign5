@@ -1,7 +1,8 @@
-total species 2
+total species 3
 mammal 2
 lion 34 carnivore
 deer 16 herbivore
 reptile 0
 bird 0
-aquatic 0
+aquatic 1
+hippos 45 livefish
